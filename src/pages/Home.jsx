@@ -13,6 +13,7 @@ const Home = () => {
       id: 'friends',
       name: 'Friends',
       description: 'Test your knowledge of the iconic sitcom Friends!',
+      emoji: '☕',
       icon: 'users',
       image: 'https://source.unsplash.com/tV80374iytg/600x400',
       color: 'from-blue-500 to-indigo-500'
@@ -21,6 +22,7 @@ const Home = () => {
       id: 'modern-family',
       name: 'Modern Family',
       description: 'How well do you know the Pritchett-Dunphy-Tucker clan?',
+      emoji: '😎',
       icon: 'home',
       image: 'https://source.unsplash.com/iG6NjE-JQwY/600x400',
       color: 'from-orange-500 to-amber-500'
@@ -29,6 +31,7 @@ const Home = () => {
       id: 'harry-potter',
       name: 'Harry Potter',
       description: 'Challenge your wizarding world knowledge!',
+      emoji: '⚡',
       icon: 'wand',
       image: 'https://source.unsplash.com/Hcl8tOIJ0L4/600x400',
       color: 'from-purple-500 to-pink-500'
@@ -112,7 +115,10 @@ const Home = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl" role="img" aria-label={`${category.name} emoji`}>
+                          {category.emoji}
+                        </span>
                         <CategoryIcon className="h-6 w-6" />
                         <h3 className="text-xl font-bold">{category.name}</h3>
                       </div>
