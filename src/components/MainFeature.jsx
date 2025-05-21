@@ -238,7 +238,7 @@ const MainFeature = ({ category }) => {
   const [timeSpent, setTimeSpent] = useState(0);
   const [startTime, setStartTime] = useState(null);
 
-  const questions = category ? quizData[category.id] : [];
+  const questions = category ? quizData[category] : [];
   const currentQuestion = questions[currentQuestionIndex];
 
   // Timer effect
