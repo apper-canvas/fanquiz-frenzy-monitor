@@ -75,7 +75,7 @@ export const PopTransition = ({ children, delay = 0, duration = 0.4, className =
         type: "spring",
         stiffness: 500,
         damping: 30,
-        delay 
+        delay: delay
       }}
       className={className}
     >
