@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from 'react-toastify';
-import { FadeTransition, SlideTransition, PopTransition } from '../transitions/Transitions';
-import { getIcon } from '../utils/iconUtils';
+import { FadeTransition, SlideTransition, PopTransition } from "../transitions/Transitions";
+import { getIcon } from "../utils/iconUtils";
 
 // Sample quiz data
 const quizData = {
