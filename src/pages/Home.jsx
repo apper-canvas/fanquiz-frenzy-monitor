@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import MainFeature from '../components/MainFeature';
+import { FadeTransition, SlideTransition, PopTransition } from '../components/transitions/Transitions';
 import { getIcon } from '../utils/iconUtils';
 
 const Home = () => {
@@ -70,8 +71,9 @@ const Home = () => {
 
   return (
     <div className="py-6">
-      {view === 'categories' ? (
-        <div className="space-y-8">
+      <AnimatePresence mode="wait">
+        {view === 'categories' ? (
+          <FadeTransition key="categories" className="space-y-8">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,13 +97,14 @@ const Home = () => {
             {categories.map((category) => {
               const CategoryIcon = getIcon(category.icon);
               return (
-                <motion.div
+                <PopTransition
+                  delay={categories.indexOf(category) * 0.1}
                   key={category.id}
-                  variants={itemAnimation}
                   className="card overflow-hidden card-hover cursor-pointer"
                   onClick={() => handleCategorySelect(category)}
                 >
-                  <div className="relative h-48 -mx-6 -mt-6 mb-4 overflow-hidden">
+                  <motion.div 
+                    className="relative h-48 -mx-6 -mt-6 mb-4 overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-80`}></div>
                     <img 
                       src={category.image} 
@@ -114,7 +117,7 @@ const Home = () => {
                         <h3 className="text-xl font-bold">{category.name}</h3>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                   <p className="text-surface-600 dark:text-surface-300 mb-4">
                     {category.description}
                   </p>
@@ -126,26 +129,30 @@ const Home = () => {
                       </svg>
                     </span>
                   </div>
-                </motion.div>
+                </PopTransition>
               );
             })}
           </motion.div>
-        </div>
-      ) : (
-        <div>
-          <button 
-            onClick={handleBackToCategories}
-            className="mb-6 btn bg-surface-200 hover:bg-surface-300 dark:bg-surface-700 dark:hover:bg-surface-600 inline-flex items-center gap-1"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-            <span>Back to Categories</span>
-          </button>
-          
-          <MainFeature category={selectedCategory} />
-        </div>
-      )}
+          </FadeTransition>
+        ) : (
+          <SlideTransition key="quiz" direction="left" className="quiz-container">
+            <motion.button 
+              onClick={handleBackToCategories}
+              className="mb-6 btn bg-surface-200 hover:bg-surface-300 dark:bg-surface-700 dark:hover:bg-surface-600 inline-flex items-center gap-1"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+              <span>Back to Categories</span>
+            </motion.button>
+            
+            <MainFeature category={selectedCategory} />
+          </SlideTransition>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

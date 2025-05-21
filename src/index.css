@@ -44,7 +44,7 @@
   }
   
   .card {
-    @apply bg-white dark:bg-surface-800 rounded-2xl shadow-card dark:shadow-none p-6 transition-all duration-300;
+    @apply bg-white dark:bg-surface-800 rounded-2xl shadow-card dark:shadow-none p-6 transition-all duration-300 will-change-transform;
   }
   
   .input {
@@ -62,7 +62,7 @@
   }
   
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1 will-change-transform;
   }
   
   .quiz-option {
@@ -75,5 +75,31 @@
   
   .quiz-option-incorrect {
     @apply border-red-500 bg-red-50 dark:bg-red-900/20;
+  }
+  
+  /* Animation Utilities */
+  .fade-in {
+    @apply animate-[fadeIn_0.5s_ease-in-out];
+  }
+  
+  .slide-up {
+    @apply animate-[slideUp_0.5s_ease-out];
+  }
+  
+  .slide-down {
+    @apply animate-[slideDown_0.5s_ease-out];
+  }
+  
+  .slide-left {
+    @apply animate-[slideLeft_0.5s_ease-out];
+  }
+  
+  .slide-right {
+    @apply animate-[slideRight_0.5s_ease-out];
+  }
+  
+  .pop-in {
+    @apply animate-[popIn_0.4s_cubic-bezier(0.34,1.56,0.64,1)];
+    will-change: transform, opacity;
   }
 }

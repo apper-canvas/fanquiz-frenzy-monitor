@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
+import { FadeTransition, SlideTransition, PopTransition } from '../transitions/Transitions';
 import { getIcon } from '../utils/iconUtils';
 
 // Sample quiz data
@@ -321,21 +322,21 @@ const MainFeature = ({ category }) => {
     }
 
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
+      <PopTransition
         className="card max-w-2xl mx-auto text-center"
       >
-        <div className="flex justify-center mb-4">
+        <motion.div 
+          className="flex justify-center mb-4"
+          animate={{ scale: [0.9, 1.2, 1] }}
+          transition={{ duration: 1, times: [0, 0.6, 1] }}
+        >
           {resultIcon}
-        </div>
+        </motion.div>
         <h2 className="text-2xl md:text-3xl font-bold mb-2">Quiz Complete!</h2>
         <div className="text-lg md:text-xl font-semibold mb-4">
           {resultMessage}
         </div>
-        
-        <div className="mb-8 p-6 bg-surface-50 dark:bg-surface-800 rounded-xl">
+        <FadeTransition delay={0.2} className="mb-8 p-6 bg-surface-50 dark:bg-surface-800 rounded-xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="p-4 bg-white dark:bg-surface-700 rounded-lg">
               <div className="text-sm text-surface-500 dark:text-surface-400">Your Score</div>
@@ -351,21 +352,24 @@ const MainFeature = ({ category }) => {
             <div className="text-sm text-surface-500 dark:text-surface-400">Time Spent</div>
             <div className="text-2xl font-bold">{formatTime(timeSpent)}</div>
           </div>
-        </div>
+        </FadeTransition>
         
-        <button
+        <motion.button
           onClick={handleRestartQuiz}
           className="btn btn-primary w-full sm:w-auto"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
           Try Again
-        </button>
-      </motion.div>
+        </motion.button>
+      </PopTransition>
     );
   }
 
   // Quiz question screen
   return (
-    <div className="max-w-3xl mx-auto">
+    <FadeTransition className="max-w-3xl mx-auto">
       <div className="mb-6 flex justify-between items-center">
         <div className="font-semibold text-lg">
           <span className="text-primary">
@@ -378,47 +382,75 @@ const MainFeature = ({ category }) => {
         </div>
       </div>
 
-      <div className="card mb-6">
+      <motion.div 
+        className="card mb-6"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
         <h2 className="text-xl md:text-2xl font-semibold mb-6">
           {currentQuestion.question}
         </h2>
         
         <div className="space-y-3">
-          {currentQuestion.options.map((option, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: isAnswered ? 1 : 1.01 }}
-              onClick={() => handleAnswerSelect(index)}
-              className={`quiz-option ${
+          <AnimatePresence>
+            {currentQuestion.options.map((option, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ scale: isAnswered ? 1 : 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ 
+                  opacity: 1, 
+                  x: 0,
+                  transition: { delay: index * 0.1 }
+                }}
+                onClick={() => handleAnswerSelect(index)}
+                className={`quiz-option ${
                 isAnswered && index === currentQuestion.correctAnswer
                   ? 'quiz-option-correct'
                   : isAnswered && index === selectedAnswer && index !== currentQuestion.correctAnswer
                   ? 'quiz-option-incorrect'
                   : ''
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span>{option}</span>
-                {isAnswered && index === currentQuestion.correctAnswer && (
-                  <CheckCircleIcon className="h-5 w-5 text-green-500" />
-                )}
-                {isAnswered && index === selectedAnswer && index !== currentQuestion.correctAnswer && (
-                  <XCircleIcon className="h-5 w-5 text-red-500" />
-                )}
-              </div>
-            </motion.div>
-          ))}
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span>{option}</span>
+                  <AnimatePresence>
+                    {isAnswered && index === currentQuestion.correctAnswer && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: "spring", stiffness: 500 }}
+                      >
+                        <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                      </motion.div>
+                    )}
+                    {isAnswered && index === selectedAnswer && index !== currentQuestion.correctAnswer && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: "spring", stiffness: 500 }}
+                      >
+                        <XCircleIcon className="h-5 w-5 text-red-500" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {isAnswered && (
-          <motion.div
+          <SlideTransition
+            direction="up"
+            className="card mb-6 border-l-4 border-primary"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="card mb-6 border-l-4 border-primary"
           >
             <div className="text-lg font-semibold mb-2">
               {selectedAnswer === currentQuestion.correctAnswer
@@ -428,22 +460,25 @@ const MainFeature = ({ category }) => {
             <p className="text-surface-600 dark:text-surface-300">
               {currentQuestion.explanation}
             </p>
-          </motion.div>
+          </SlideTransition>
         )}
       </AnimatePresence>
 
       <div className="flex justify-end">
-        <button
+        <motion.button
           onClick={handleNextQuestion}
           disabled={!isAnswered}
+          whileHover={isAnswered ? { scale: 1.05 } : {}}
+          whileTap={isAnswered ? { scale: 0.95 } : {}}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
           className={`btn ${
             isAnswered ? 'btn-primary' : 'bg-surface-300 dark:bg-surface-700 cursor-not-allowed'
           }`}
         >
           {currentQuestionIndex === questions.length - 1 ? "Finish Quiz" : "Next Question"}
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </FadeTransition>
   );
 };
 

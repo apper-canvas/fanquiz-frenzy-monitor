@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { AnimatePresence } from 'framer-motion';
 import { Moon, Sun } from 'lucide-react';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
@@ -11,6 +12,8 @@ function App() {
     return savedMode 
       ? JSON.parse(savedMode) 
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const location = useLocation();
+
   });
 
   useEffect(() => {
@@ -47,10 +50,12 @@ function App() {
       </header>
 
       <main className="container mx-auto px-4 py-6">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <footer className="mt-12 py-6 bg-surface-100 dark:bg-surface-800">

@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { PopTransition } from '../components/transitions/Transitions';
 import { getIcon } from '../utils/iconUtils';
 
 const NotFound = () => {
-  const AlertTriangleIcon = getIcon('alert-triangle');
+    <PopTransition className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
   const HomeIcon = getIcon('home');
-
+        <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, repeatType: "mirror", duration: 3 }} className="text-8xl font-bold text-primary">404</motion.div>
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <div className="mb-6">
@@ -12,14 +14,17 @@ const NotFound = () => {
       </div>
       <h1 className="text-4xl md:text-5xl font-bold mb-4">404</h1>
       <p className="text-xl md:text-2xl mb-2">Page Not Found</p>
-      <p className="text-surface-600 dark:text-surface-400 mb-8 max-w-lg">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link 
         Sorry, the page you're looking for doesn't exist or has been moved.
       </p>
-      <Link 
-        to="/" 
-        className="btn btn-primary inline-flex items-center gap-2"
+          >Back to Home</Link>
+        </motion.div>
       >
-        <HomeIcon className="h-5 w-5" />
+    </PopTransition>
         <span>Back to Home</span>
       </Link>
     </div>
